@@ -13,8 +13,7 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   bool _obscurePassword = true;
-  final LoginController loginController = Get.put(LoginController());
-
+  final loginController = Get.find<LoginController>();
 
   @override
   Widget build(BuildContext context) {

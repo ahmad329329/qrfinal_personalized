@@ -54,6 +54,7 @@ class LoginController extends GetxController {
       log(value.toString());
       if(value['status'].toString() == 'true'){
         Utils.snackbar('Success', 'Login Successfully');
+        Get.offNamed(RouteName.homeScreen);
       }
       else{
         Utils.snackbar('Error', 'Invalid Credentials');

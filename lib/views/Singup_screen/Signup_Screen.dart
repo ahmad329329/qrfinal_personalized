@@ -14,7 +14,7 @@ class SignupScreen extends StatefulWidget {
 class _SignupScreenState extends State<SignupScreen> {
   bool _obscurePassword = true;
   bool _obscureConfirm = true;
-  final SignupController signUpController = Get.put(SignupController());
+  final signUpController = Get.find<SignupController>();
   final TextEditingController confirmPasswordController = TextEditingController();
 
   @override
