@@ -83,11 +83,20 @@ void signupApi() async {
     'degree':degreeController.value.text,
   };
 
-  _api.Signupapi(data).then((value){
+  _api.Signupapi(data).then((value) {
     loading.value = false;
-    Utils.snackbar('Success', 'Registration Successfully');
-    Get.offAllNamed(RouteName.homeScreen);
-  }).onError((error, StackTrace){
+    print(value.toString());
+    if (value['status'].toString() == 'true') {
+      Utils.snackbar('Success', 'Registration Successfully');
+      Get.offNamed(RouteName.homeScreen);
+    }
+    if (value['status'].toString() == 'false') {
+      Utils.snackbar('Error', value['message']);
+    } else {
+      Utils.snackbar('Error', 'Registration Failed');
+    }
+  }
+  ).onError((error, StackTrace){
     loading.value = false;
     Utils.snackbar('Error', error.toString());
 
