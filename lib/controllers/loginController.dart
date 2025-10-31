@@ -1,12 +1,14 @@
-import 'dart:developer';
+
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import 'package:qrfinal_personalized/User_Prefrences/User_Prefrecnes.dart';
 import 'package:qrfinal_personalized/res/routes/routes_names.dart';
 import 'package:qrfinal_personalized/utils/utils.dart';
-
+import '../Models/User_model/User_Model.dart';
 import '../repositories/login_repository/Login_Repository.dart';
 
 class LoginController extends GetxController {
+  UserPrefrences userPrefrences=UserPrefrences();
   final emailController = TextEditingController().obs;
   final passwordController = TextEditingController().obs;
   final emailFocusNode = FocusNode().obs;
@@ -51,9 +53,11 @@ class LoginController extends GetxController {
 
     _api.loginapi(data).then((value){
       loading.value = false;
-      log(value.toString());
       if(value['status'].toString() == 'true'){
         Utils.snackbar('Success', 'Login Successfully');
+        userPrefrences.saveUser(UserModel(value['id'].toString()))
+            .onError((error, stackTrace) => Utils.snackbar('Error', error.toString())
+        );
         Get.offNamed(RouteName.homeScreen);
       }
       else{

@@ -39,7 +39,7 @@ dependencies:
   http: ^1.5.0
   fluttertoast: ^9.0.0
   fl_chart: ^0.65.0
-  get_storage:
+  shared_preferences: ^2.5.3
 
 dev_dependencies:
   flutter_test:

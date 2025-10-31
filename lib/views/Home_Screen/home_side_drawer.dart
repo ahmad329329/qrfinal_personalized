@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
+import 'package:qrfinal_personalized/User_Prefrences/User_Prefrecnes.dart';
 import 'package:qrfinal_personalized/res/routes/routes_names.dart';
 
 class HomeSideDrawer extends StatelessWidget {
    HomeSideDrawer({super.key});
-  final storage = GetStorage();
-
+   UserPrefrences userPrefrences=UserPrefrences();
 
   @override
   Widget build(BuildContext context) {
@@ -86,7 +85,7 @@ class HomeSideDrawer extends StatelessWidget {
 
           // 🔹 LOGOUT
           _buildDrawerItem(Icons.logout, "Logout", () {
-            storage.write('isLoggedIn', false);
+            userPrefrences.removeUser();
             Get.offAllNamed(RouteName.loginScreen);
           }, color: Colors.red),
         ],

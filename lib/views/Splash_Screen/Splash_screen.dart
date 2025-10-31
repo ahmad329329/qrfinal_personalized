@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:qrfinal_personalized/User_Prefrences/User_Prefrecnes.dart';
 import 'package:qrfinal_personalized/services/Splash_Services.dart';
 import '../../res/assets/image_assets.dart';
 
@@ -12,6 +13,7 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
   SplashServices splashServices = SplashServices();
+
 
   @override
   void initState(){
