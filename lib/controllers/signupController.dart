@@ -1,11 +1,14 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import 'package:qrfinal_personalized/User_Prefrences/User_Prefrecnes.dart';
 import 'package:qrfinal_personalized/repositories/signup_repository/Signup_Repository.dart';
 import '../../utils/utils.dart';
+import '../Models/User_model/User_Model.dart';
 import '../res/routes/routes_names.dart';
 
 class SignupController extends GetxController {
+  UserPrefrences userPrefrences=UserPrefrences();
 
   final _api= SignupRepository();
 
@@ -88,6 +91,7 @@ void signupApi() async {
     print(value.toString());
     if (value['status'].toString() == 'true') {
       Utils.snackbar('Success', 'Registration Successfully');
+      userPrefrences.saveUser(UserModel(value['id'].toString()));
       Get.offNamed(RouteName.homeScreen);
     }
     if (value['status'].toString() == 'false') {

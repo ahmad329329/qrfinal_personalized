@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:qrfinal_personalized/User_Prefrences/User_Prefrecnes.dart';
+import 'package:qrfinal_personalized/controllers/HomeController.dart';
 import 'package:qrfinal_personalized/res/routes/routes_names.dart';
 
 class HomeSideDrawer extends StatelessWidget {
    HomeSideDrawer({super.key});
    UserPrefrences userPrefrences=UserPrefrences();
+   HomeController homeController=Get.find<HomeController>();
 
   @override
   Widget build(BuildContext context) {
@@ -15,31 +17,51 @@ class HomeSideDrawer extends StatelessWidget {
         padding: EdgeInsets.zero,
         children: [
           // Drawer Header
-          const DrawerHeader(
-            decoration: BoxDecoration(color: Colors.blue),
+          DrawerHeader(
+            decoration: const BoxDecoration(color: Colors.blue),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                CircleAvatar(
+                const CircleAvatar(
                   radius: 35,
                   backgroundColor: Colors.white,
                   child: Icon(Icons.person, size: 50, color: Colors.blue),
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 Text(
-                  "Muhammad Ahmad",
-                  style: TextStyle(
+                  homeController.name.value,
+                  style: const TextStyle(
                     color: Colors.white,
                     fontSize: 18,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
-                Text(
-                  "Student - BS(SE) 8th Semester",
-                  style: TextStyle(
-                    color: Colors.white70,
-                    fontSize: 14,
-                  ),
+                Row(
+                  children: [
+                    Text(
+                      homeController.role.value,
+                      style: TextStyle(
+                        color: Colors.white70,
+                        fontSize: 14,
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    Text(
+                      homeController.registrationNo.value,
+                      style: TextStyle(
+                        color: Colors.white70,
+                        fontSize: 14,
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    Text(
+                      homeController.degree.value,
+                      style: TextStyle(
+                        color: Colors.white70,
+                        fontSize: 14,
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
