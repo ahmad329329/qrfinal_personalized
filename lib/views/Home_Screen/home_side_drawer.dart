@@ -36,32 +36,34 @@ class HomeSideDrawer extends StatelessWidget {
                     fontWeight: FontWeight.w600,
                   ),
                 ),
-                Row(
-                  children: [
-                    Text(
-                      homeController.role.value,
-                      style: TextStyle(
-                        color: Colors.white70,
-                        fontSize: 14,
+                SingleChildScrollView(
+                  child: Row(
+                    children: [
+                      Text(
+                        homeController.role.value,
+                        style: TextStyle(
+                          color: Colors.white70,
+                          fontSize: 14,
+                        ),
                       ),
-                    ),
-                    const SizedBox(width: 10),
-                    Text(
-                      homeController.registrationNo.value,
-                      style: TextStyle(
-                        color: Colors.white70,
-                        fontSize: 14,
+                      const SizedBox(width: 10),
+                      Text(
+                        homeController.registrationNo.value,
+                        style: TextStyle(
+                          color: Colors.white70,
+                          fontSize: 14,
+                        ),
                       ),
-                    ),
-                    const SizedBox(width: 10),
-                    Text(
-                      homeController.degree.value,
-                      style: TextStyle(
-                        color: Colors.white70,
-                        fontSize: 14,
+                      const SizedBox(width: 10),
+                      Text(
+                        homeController.degree.value,
+                        style: TextStyle(
+                          color: Colors.white70,
+                          fontSize: 14,
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ],
             ),

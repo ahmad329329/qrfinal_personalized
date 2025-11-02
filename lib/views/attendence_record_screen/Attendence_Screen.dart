@@ -1,40 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:qrfinal_personalized/User_Prefrences/User_Prefrecnes.dart';
+import '../../controllers/attendence_detail_controller.dart';
 
 class AttendanceRecordScreen extends StatelessWidget {
   AttendanceRecordScreen({super.key});
 
-  // Reactive state using GetX
-  final selectedMonth = "October 2025".obs;
-  final selectedSubject = "All Subjects".obs;
-
-
-  final Map<String, Map<String, List<Map<String, String>>>> data = {
-    "October 2025": {
-      "Oct 21, 2025": [
-        {"subject": "Mobile App Development", "teacher": "Sir Usman Ali", "status": "Present"},
-        {"subject": "Database Systems", "teacher": "Sir Ahmed Khan", "status": "Absent"},
-        {"subject": "Software Testing", "teacher": "Sir Bilal", "status": "Late"},
-        {"subject": "Operating Systems", "teacher": "Sir Kamran", "status": "Present"},
-      ],
-      "Oct 22, 2025": [
-        {"subject": "Mobile App Development", "teacher": "Sir Usman Ali", "status": "Present"},
-        {"subject": "AI Fundamentals", "teacher": "Miss Hina", "status": "Present"},
-        {"subject": "Software Engineering", "teacher": "Sir Usman Ali", "status": "Present"},
-        {"subject": "Discrete Math", "teacher": "Sir Waseem", "status": "Absent"},
-      ],
-    },
-    "November 2025": {
-      "Nov 2, 2025": [
-        {"subject": "Mobile App Development", "teacher": "Sir Usman Ali", "status": "Late"},
-        {"subject": "Database Systems", "teacher": "Sir Ahmed Khan", "status": "Present"},
-        {"subject": "Compiler Design", "teacher": "Sir Ali", "status": "Absent"},
-      ],
-    },
-  };
+  final AttendanceController controller = Get.put(AttendanceController());
+  final UserPrefrences userPrefrences = UserPrefrences();
 
   @override
   Widget build(BuildContext context) {
+    // ✅ Fetch user data from preferences once the widget builds
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      final user = await userPrefrences.getUser();
+      if (user.id != null && user.id!.isNotEmpty) {
+        controller.fetchAttendance();
+      } else {
+        Get.snackbar("Error", "User not found in preferences");
+      }
+    });
+
     return Scaffold(
       backgroundColor: Colors.blue.shade50,
       appBar: AppBar(
@@ -45,41 +31,49 @@ class AttendanceRecordScreen extends StatelessWidget {
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Obx(() {
-          final monthData = data[selectedMonth.value] ?? {};
-          final allSubjects = _extractSubjects(data);
-          final filteredSubject = selectedSubject.value;
+          if (controller.isLoading.value) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
+          final data = controller.attendanceData;
+          if (data.isEmpty) {
+            return const Center(child: Text("No attendance data available"));
+          }
+
+          final monthData = data[controller.selectedMonth.value] ?? {};
+          final allSubjects = controller.extractSubjects();
+          final filteredSubject = controller.selectedSubject.value;
 
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // 🔹 Filters Row
+              // 🔹 Filters
               Row(
                 children: [
                   Expanded(
                     child: _buildDropdown(
                       label: "Month",
-                      value: selectedMonth.value,
+                      value: controller.selectedMonth.value,
                       items: data.keys.toList(),
-                      onChanged: (val) => selectedMonth.value = val!,
+                      onChanged: (val) => controller.selectedMonth.value = val!,
                     ),
                   ),
                   const SizedBox(width: 10),
                   Expanded(
                     child: _buildDropdown(
                       label: "Subject",
-                      value: selectedSubject.value,
+                      value: controller.selectedSubject.value,
                       items: ["All Subjects", ...allSubjects],
-                      onChanged: (val) => selectedSubject.value = val!,
+                      onChanged: (val) => controller.selectedSubject.value = val!,
                     ),
                   ),
                 ],
               ),
               const SizedBox(height: 20),
 
-              // 🔹 Month Title
               Center(
                 child: Text(
-                  selectedMonth.value,
+                  controller.selectedMonth.value,
                   style: const TextStyle(
                     fontSize: 22,
                     fontWeight: FontWeight.bold,
@@ -89,11 +83,8 @@ class AttendanceRecordScreen extends StatelessWidget {
               ),
               const SizedBox(height: 20),
 
-              // 🔹 Attendance List
               Expanded(
-                child: monthData.isEmpty
-                    ? const Center(child: Text("No attendance data available"))
-                    : ListView(
+                child: ListView(
                   children: monthData.entries.map((entry) {
                     final date = entry.key;
                     final lectures = entry.value
@@ -105,7 +96,8 @@ class AttendanceRecordScreen extends StatelessWidget {
                     if (lectures.isEmpty) return const SizedBox();
 
                     return Card(
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15)),
                       elevation: 3,
                       margin: const EdgeInsets.only(bottom: 16),
                       child: Padding(
@@ -132,11 +124,13 @@ class AttendanceRecordScreen extends StatelessWidget {
                                 leading: Icon(icon, color: color, size: 30),
                                 title: Text(
                                   lecture["subject"]!,
-                                  style: const TextStyle(fontWeight: FontWeight.bold),
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.bold),
                                 ),
                                 subtitle: Text(
                                   "Teacher: ${lecture["teacher"]!} | Status: $status",
-                                  style: TextStyle(color: color, fontSize: 13),
+                                  style:
+                                  TextStyle(color: color, fontSize: 13),
                                 ),
                               );
                             }),
@@ -154,7 +148,6 @@ class AttendanceRecordScreen extends StatelessWidget {
     );
   }
 
-  // 🔹 Helper Dropdown Widget
   Widget _buildDropdown({
     required String label,
     required String value,
@@ -173,19 +166,16 @@ class AttendanceRecordScreen extends StatelessWidget {
           value: value,
           isExpanded: true,
           icon: const Icon(Icons.arrow_drop_down),
-          items: items.map((item) {
-            return DropdownMenuItem<String>(
-              value: item,
-              child: Text(item, style: const TextStyle(fontSize: 14)),
-            );
-          }).toList(),
+          items: items
+              .map((item) =>
+              DropdownMenuItem(value: item, child: Text(item)))
+              .toList(),
           onChanged: onChanged,
         ),
       ),
     );
   }
 
-  // 🔹 Helper Methods
   IconData _getStatusIcon(String status) {
     switch (status) {
       case "Present":
@@ -210,30 +200,5 @@ class AttendanceRecordScreen extends StatelessWidget {
       default:
         return Colors.grey;
     }
-  }
-
-  String _getComment(String status) {
-    switch (status) {
-      case "Present":
-        return "Attended the class on time and participated well.";
-      case "Absent":
-        return "Did not attend this lecture.";
-      case "Late":
-        return "Arrived late but attended most of the session.";
-      default:
-        return "No comment available.";
-    }
-  }
-
-  List<String> _extractSubjects(Map<String, Map<String, List<Map<String, String>>>> data) {
-    final subjects = <String>{};
-    for (var month in data.values) {
-      for (var lectures in month.values) {
-        for (var lecture in lectures) {
-          subjects.add(lecture["subject"]!);
-        }
-      }
-    }
-    return subjects.toList();
   }
 }
