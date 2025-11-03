@@ -1,5 +1,5 @@
 import 'package:qrfinal_personalized/res/ap_url/app_url.dart';
-import '../../Models/attendence model/Attendence_Model.dart';
+import '../../Models/attendence model/Notifcation_Model.dart';
 import '../../data/network/Network_Api_Services.dart';
 
 class Attendencestaticsrepository {

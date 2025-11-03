@@ -1,35 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import '../../controllers/notifcation_controller.dart';
 
 class NotificationScreen extends StatelessWidget {
   NotificationScreen({super.key});
 
-  // Example notifications (can later be fetched from API)
-  final List<Map<String, dynamic>> notifications = [
-    {
-      "title": "Attendance Marked",
-      "message": "You were marked Present in Mobile App Development.",
-      "time": "2 hours ago",
-      "type": "success"
-    },
-    {
-      "title": "New Announcement",
-      "message": "Midterm exams will start from November 10th.",
-      "time": "5 hours ago",
-      "type": "info"
-    },
-    {
-      "title": "Attendance Alert",
-      "message": "You were marked Absent in Database Systems.",
-      "time": "Yesterday",
-      "type": "warning"
-    },
-    {
-      "title": "Lecture Cancelled",
-      "message": "Today’s Software Testing class is cancelled.",
-      "time": "2 days ago",
-      "type": "cancel"
-    },
-  ];
+  final NotificationController controller = Get.put(NotificationController());
 
   @override
   Widget build(BuildContext context) {
@@ -46,60 +22,75 @@ class NotificationScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-        child: ListView.builder(
-          itemCount: notifications.length,
-          itemBuilder: (context, index) {
-            final notification = notifications[index];
-            final color = _getColor(notification["type"]);
-            final icon = _getIcon(notification["type"]);
+      body: Obx(() {
+        if (controller.isLoading.value) {
+          return const Center(child: CircularProgressIndicator());
+        }
 
-            return Card(
-              margin: const EdgeInsets.only(bottom: 12),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(15),
-              ),
-              elevation: 2,
-              child: ListTile(
-                leading: CircleAvatar(
-                  backgroundColor: color.withOpacity(0.2),
-                  child: Icon(icon, color: color),
+        if (controller.notifications.isEmpty) {
+          return const Center(
+            child: Text(
+              "No notifications available",
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+            ),
+          );
+        }
+
+        return Padding(
+          padding: const EdgeInsets.all(16),
+          child: ListView.builder(
+            itemCount: controller.notifications.length,
+            itemBuilder: (context, index) {
+              final notification = controller.notifications[index];
+              final color = _getColor(notification.type);
+              final icon = _getIcon(notification.type);
+
+              return Card(
+                margin: const EdgeInsets.only(bottom: 12),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15),
                 ),
-                title: Text(
-                  notification["title"],
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black87,
+                elevation: 2,
+                child: ListTile(
+                  leading: CircleAvatar(
+                    backgroundColor: color.withOpacity(0.2),
+                    child: Icon(icon, color: color),
+                  ),
+                  title: Text(
+                    notification.title,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black87,
+                    ),
+                  ),
+                  subtitle: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const SizedBox(height: 4),
+                      Text(
+                        notification.message,
+                        style: const TextStyle(color: Colors.black54),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        notification.createdAt,
+                        style: const TextStyle(
+                          fontSize: 12,
+                          color: Colors.grey,
+                        ),
+                      ),
+                    ],
+                  ),
+                  trailing: IconButton(
+                    icon: const Icon(Icons.more_vert),
+                    onPressed: () {},
                   ),
                 ),
-                subtitle: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const SizedBox(height: 4),
-                    Text(
-                      notification["message"],
-                      style: const TextStyle(color: Colors.black54),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      notification["time"],
-                      style: const TextStyle(
-                        fontSize: 12,
-                        color: Colors.grey,
-                      ),
-                    ),
-                  ],
-                ),
-                trailing: IconButton(
-                  icon: const Icon(Icons.more_vert),
-                  onPressed: () {},
-                ),
-              ),
-            );
-          },
-        ),
-      ),
+              );
+            },
+          ),
+        );
+      }),
     );
   }
 

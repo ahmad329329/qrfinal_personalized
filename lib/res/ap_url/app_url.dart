@@ -13,4 +13,6 @@ class AppUrl {
   static const String homeApi = '$baseUrl/user_home_data.php';
   static const String getattendenceApi = '$baseUrl/get_attendence.php';
   static const String getstatsApi = '$baseUrl/get_attendance_statistics.php';
+  static const String getnotication = '$baseUrl/get_notifcation.php';
+
 }

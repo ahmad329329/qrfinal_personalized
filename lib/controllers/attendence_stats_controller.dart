@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import '../Models/attendence model/Attendence_Model.dart';
+import '../Models/attendence model/Notifcation_Model.dart';
 import '../User_Prefrences/User_Prefrecnes.dart';
 import '../repositories/attendence_stats_repository/AttendenceStatsRepository.dart';
 
