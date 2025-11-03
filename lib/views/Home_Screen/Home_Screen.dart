@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../controllers/HomeController.dart';
 import '../../res/routes/routes_names.dart';
+import '../qr_screen/Qr_Screen.dart';
 import 'home_side_drawer.dart';
 import 'home_containers.dart';
 
@@ -36,28 +37,41 @@ class HomeScreen extends StatelessWidget {
                 ),
               )),
               const SizedBox(height: 30),
-              Container(
-                padding: const EdgeInsets.symmetric(vertical: 40),
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  color: Colors.blue,
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: const Column(
-                  children: [
-                    Icon(Icons.qr_code_scanner, size: 60, color: Colors.white),
-                    SizedBox(height: 10),
-                    Text(
-                      "Scan QR Code",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 20,
-                        fontWeight: FontWeight.w600,
+              GestureDetector(
+                onTap: () async {
+                  final result = await Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => const QrScannerScreen()),
+                  );
+                  if (result != null) {
+                    debugPrint("Scanned QR: $result");
+                    // You can call API here to mark attendance, etc.
+                  }
+                },
+                child: Container(
+                  padding: const EdgeInsets.symmetric(vertical: 40),
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    color: Colors.blue,
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: const Column(
+                    children: [
+                      Icon(Icons.qr_code_scanner, size: 60, color: Colors.white),
+                      SizedBox(height: 10),
+                      Text(
+                        "Scan QR Code",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 20,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
+
               const SizedBox(height: 30),
               Expanded(
                 child: GridView.count(

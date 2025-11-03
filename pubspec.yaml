@@ -40,6 +40,8 @@ dependencies:
   fluttertoast: ^9.0.0
   fl_chart: ^0.65.0
   shared_preferences: ^2.5.3
+  qr_code_scanner_plus: ^2.0.14
+
 
 dev_dependencies:
   flutter_test:
