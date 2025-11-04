@@ -15,4 +15,5 @@ class AppUrl {
   static const String getstatsApi = '$baseUrl/get_attendance_statistics.php';
   static const String getnotication = '$baseUrl/get_notifcation.php';
   static const String getclasses = '$baseUrl/get_classes.php';
+  static const String scanqr = '$baseUrl/scan_qr.php';
 }

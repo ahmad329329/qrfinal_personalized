@@ -41,7 +41,7 @@ class HomeScreen extends StatelessWidget {
                 onTap: () async {
                   final result = await Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (_) => const QrScannerScreen()),
+                    MaterialPageRoute(builder: (_) =>  QrScanScreen()),
                   );
                   if (result != null) {
                     debugPrint("Scanned QR: $result");
